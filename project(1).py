@@ -20,6 +20,14 @@ def taskbullet2():
 def taskbullet3():
     return render_template('taskbullet(3).html')
 
+@app.route('/accounts1')
+def accounts1():
+    return render_template('accounts(1).html')
+
+@app.route('/accounts2')
+def accounts2():
+    return render_template('accounts(2).html')
+
 
 @app.route('/save', methods=['POST'])
 def save():
@@ -90,6 +98,63 @@ def remove():
     return jsonify({'result': 'success'})
 
 
+@app.route('/save_accounts', methods=['POST'])
+def save_accounts():
+    name1_receive = request.form['name1_give']
+    phone_receive = request.form['phone_give']
+    fax_receive = request.form['fax_give']
+    email_receive = request.form['email_give']
+    note_receive = request.form['note_give']
+
+
+    num = int(db.save_accounts.count())  # 현재 컬렉션 도큐먼트가 몇개 있는지 알아오기
+
+    print(name1_receive, phone_receive,
+          fax_receive, email_receive, note_receive)
+
+    doc = {
+        'number': num + 1,
+        'name1': name1_receive,
+        'phone': phone_receive,
+        'fax': fax_receive,
+        'email': email_receive,
+        'note': note_receive,
+        }
+    db.save_accounts.insert_one(doc)
+    return jsonify({'result': 'success'})
+
+
+@app.route('/save_accounts', methods=['GET'])
+def accounts_look():
+    accounts = list(db.save_accounts.find({}, {'_id': 0}))
+    return jsonify({'result': 'success', 'accounts': accounts})
+
+@app.route('/details', methods=['GET'])
+def details():
+    num = request.args.get('id')
+    print(num)
+
+    results = list(db.save_accounts.find({'number': int(num)}, {'_id':0}))[0]
+
+    print(results)
+
+    return render_template('accounts(3).html', name1=results['name1'],
+                           phone=results['phone'], fax=results['fax'],
+                           email=results['email'], note=results['note'])
+
+@app.route('/remove_accounts', methods=['POST'])
+def remove_accounts():
+    num = request.form['id']
+    print(num)
+
+    db.save_accounts.delete_one({'number': int(num)})
+
+    return jsonify({'result': 'success'})
+
+if __name__ == '__main__':
+    app.run('0.0.0.0',port=5000,debug=True)
+
+
 
 
 
@@ -98,6 +163,9 @@ def remove():
 
 if __name__ == '__main__':
     app.run('0.0.0.0',port=5000,debug=True)
+
+
+
 
 
 

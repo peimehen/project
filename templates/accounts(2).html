@@ -90,43 +90,44 @@ integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCm
     <script>
 
         $(document).ready(function(){
-         $('#save_box').html('');
+         $('#save_box1').html('');
          listing();
       });
 
    function listing() {
       $.ajax({
          type: "GET",
-         url: "/save",
+         url: "/save_accounts",
          data: {},
          success: function(response){
-            let saves = response['saves'];
-            for (let i = 0; i < saves.length; i++) {
-               make_saves(saves[i]['number'], saves[i]['part_name'], saves[i]['name'], saves[i]['date'], saves[i]['task_details'])
+            let accounts = response['accounts'];
+            for (let i = 0; i < accounts.length; i++) {
+               make_accounts(accounts[i]['number'], accounts[i]['name1'], accounts[i]['phone'], accounts[i]['fax'], accounts[i]['email'], accounts[i]['note'])
             }
          }
       })
    }
 
-   function make_saves(rank, part_name, name, date, task_details) {
+   function make_accounts(rank, name1, phone, fax, email, note) {
        let html = '<tr>\
       <td>' + rank + '</td>\
-      <td>' + part_name + '</td>\
-      <td>' + name + '</td>\
-      <td>' + date + '</td>\
-      <td>' + task_details + '</td>\
-      <td><a href="/detail?id=' + rank + '"><p>click</p></a></td>\
+      <td>' + name1 + '</td>\
+      <td>' + phone + '</td>\
+      <td>' + fax + '</td>\
+      <td>' + email + '</td>\
+      <td>' + note + '</td>\
+      <td><a href="/details?id=' + rank + '"><p>click</p></a></td>\
       <td><button onclick="remove(\''+ rank +'\')"><p>delete</p></button></td>\
       </tr>';
       console.log(html);
-      $('#save_box').append(html);
+      $('#save_box1').append(html);
    }
 
      function remove(rank) {
 
         $.ajax({
           type: "POST",
-          url: "/remove",
+          url: "/remove_accounts",
           data: {"id": rank},
           success: function(response){
             if(response['result'] == 'success'){
@@ -146,7 +147,7 @@ integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCm
 <body>
     <div class="wrap">
         <h1 class="index">
-            업무일지 관리 목록
+            거래처 관리 목록
         </h1>
         <div class="search">
             <input type="text">
@@ -157,15 +158,16 @@ integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCm
                 <thead>
                     <tr>
                         <th scope="col">연번</th>
-                        <th>부서명</th>
-                        <th>작성자</th>
-                        <th>작성일자</th>
-                        <th>주요업무내용</th>
+                        <th>거래처명</th>
+                        <th>전화번호</th>
+                        <th>Fax번호</th>
+                        <th>E-mail</th>
+                        <th>비고</th>
                         <th>내용보기</th>
                         <th>내용삭제</th>
                     </tr>
                 </thead>
-                <tbody id="save_box">
+                <tbody id="save_box1">
                     <tr>
                         <td>Table Data</td>
                         <td>Table Data</td>
@@ -201,7 +203,7 @@ integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCm
 
 
         <div class="icons">
-            <a href="/taskbullet2" class="uk-icon-link uk-margin-small-right" uk-icon="file-edit"></a>
+            <a href="/accounts1" class="uk-icon-link uk-margin-small-right" uk-icon="file-edit"></a>
 
         </div>
     </div>
@@ -209,8 +211,4 @@ integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCm
 </body>
 
 </html>
-
-
-
-
 
